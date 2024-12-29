@@ -22,24 +22,21 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { schemaLogin } from "../schema";
+import useLogin from "../api/use-login";
 
-const formLogin = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must have latest 8 character" })
-    .max(256, { message: "Password must have less than 256 character" }),
-});
 const SignInCard = () => {
-  const form = useForm<z.infer<typeof formLogin>>({
-    resolver: zodResolver(formLogin),
+  const { mutate } = useLogin();
+  const form = useForm<z.infer<typeof schemaLogin>>({
+    resolver: zodResolver(schemaLogin),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  const onSubmit = (data: z.infer<typeof formLogin>) => {
+  const onSubmit = (data: z.infer<typeof schemaLogin>) => {
     console.log(data);
+    mutate(data);
   };
 
   return (
@@ -75,7 +72,7 @@ const SignInCard = () => {
                     <Input
                       {...field}
                       type="email"
-                      placeholder="Enter username"
+                      placeholder="Enter email address"
                     />
                   </FormControl>
                   <FormMessage />
@@ -91,7 +88,7 @@ const SignInCard = () => {
                     <Input
                       {...field}
                       type="password"
-                      placeholder="Enter password"
+                      placeholder="Enter your password"
                     />
                   </FormControl>
                   <FormMessage />
@@ -107,7 +104,7 @@ const SignInCard = () => {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardFooter className="flex flex-col gap-4 mt-4">
+      <CardContent className="flex flex-col gap-4 mt-4">
         <Button className="w-full gap-x-2" variant={"secondary"}>
           <FcGoogle />
           Login with Google
@@ -116,6 +113,15 @@ const SignInCard = () => {
           <FaGithub />
           Login with Github
         </Button>
+      </CardContent>
+
+      <CardFooter>
+        <div className="mx-auto">
+          Don&apos;t have an account ?
+          <Link href={"/sign-up"}>
+            <span className="text-blue-700">&nbsp;Sign up</span>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );

@@ -22,28 +22,22 @@ import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
-const formSignUp = z.object({
-  username: z
-    .string()
-    .min(4, { message: "Username must have latest 4 character" })
-    .max(256, { message: "Username must have less than 256 character" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must have latest 8 character" })
-    .max(256, { message: "Password must have less than 256 character" }),
-});
+import { schemaSignUp } from "../schema";
+import useRegister from "../api/use-register";
+
 const SignUpCard = () => {
-  const form = useForm<z.infer<typeof formSignUp>>({
-    resolver: zodResolver(formSignUp),
+  const { mutate } = useRegister();
+  const form = useForm<z.infer<typeof schemaSignUp>>({
+    resolver: zodResolver(schemaSignUp),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
   });
-  const onSubmit = (data: z.infer<typeof formSignUp>) => {
+  const onSubmit = (data: z.infer<typeof schemaSignUp>) => {
     console.log(data);
+    mutate(data);
   };
   return (
     <Card className="w-full h-full md:w-[487] border-none shadow-none">
@@ -70,7 +64,7 @@ const SignUpCard = () => {
             className="flex flex-col gap-4"
           >
             <FormField
-              name="username"
+              name="name"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -78,7 +72,7 @@ const SignUpCard = () => {
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter username"
+                      placeholder="Enter name"
                     />
                   </FormControl>
                   <FormMessage />
@@ -127,7 +121,7 @@ const SignUpCard = () => {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardFooter className="flex flex-col gap-4 mt-4">
+      <CardContent className="flex flex-col gap-4 mt-4">
         <Button className="w-full gap-x-2" variant={"secondary"}>
           <FcGoogle />
           Sign up with Google
@@ -136,6 +130,14 @@ const SignUpCard = () => {
           <FaGithub />
           Sign up with Github
         </Button>
+      </CardContent>
+      <CardFooter>
+        <div className="mx-auto">
+          Already have an account ?
+          <Link href={"/sign-in"}>
+            <span className="text-blue-700">&nbsp;Sign in</span>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );
