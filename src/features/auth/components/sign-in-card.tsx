@@ -1,3 +1,4 @@
+"use client";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { DottedSeparator } from "@/components/dotted-separator";
@@ -7,7 +8,6 @@ import {
   Card,
   CardContent,
   CardTitle,
-  CardDescription,
   CardHeader,
   CardFooter,
 } from "@/components/ui/card";
@@ -26,7 +26,7 @@ import { schemaLogin } from "../schema";
 import useLogin from "../api/use-login";
 
 const SignInCard = () => {
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
   const form = useForm<z.infer<typeof schemaLogin>>({
     resolver: zodResolver(schemaLogin),
     defaultValues: {
@@ -35,24 +35,12 @@ const SignInCard = () => {
     },
   });
   const onSubmit = (data: z.infer<typeof schemaLogin>) => {
-    console.log(data);
     mutate(data);
   };
-
   return (
     <Card className="w-full h-full md:w-[487] border-none shadow-none">
       <CardHeader>
-        <CardTitle className="text-xl">Welcome back!</CardTitle>
-        <CardDescription className="line-clamp-2">
-          By signing up, you agree to our{" "}
-          <Link className="text-blue-700" href={"/privacy"}>
-            Privacy Policy
-          </Link>{" "}
-          and{" "}
-          <Link className="text-blue-700" href={"/service"}>
-            Term of Service
-          </Link>
-        </CardDescription>
+        <CardTitle className="text-xl text-center">Welcome back!</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeparator />
@@ -72,6 +60,7 @@ const SignInCard = () => {
                     <Input
                       {...field}
                       type="email"
+                      disabled={isPending}
                       placeholder="Enter email address"
                     />
                   </FormControl>
@@ -88,6 +77,7 @@ const SignInCard = () => {
                     <Input
                       {...field}
                       type="password"
+                      disabled={isPending}
                       placeholder="Enter your password"
                     />
                   </FormControl>
@@ -95,7 +85,7 @@ const SignInCard = () => {
                 </FormItem>
               )}
             />
-            <Button className="w-full" size={"lg"}>
+            <Button className="w-full" size={"lg"} disabled={isPending}>
               Login
             </Button>
           </form>
@@ -105,11 +95,19 @@ const SignInCard = () => {
         <DottedSeparator />
       </div>
       <CardContent className="flex flex-col gap-4 mt-4">
-        <Button className="w-full gap-x-2" variant={"secondary"}>
+        <Button
+          className="w-full gap-x-2"
+          variant={"secondary"}
+          disabled={isPending}
+        >
           <FcGoogle />
           Login with Google
         </Button>
-        <Button className="w-full gap-x-2" variant={"outline"}>
+        <Button
+          className="w-full gap-x-2"
+          variant={"outline"}
+          disabled={isPending}
+        >
           <FaGithub />
           Login with Github
         </Button>

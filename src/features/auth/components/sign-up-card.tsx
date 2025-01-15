@@ -1,3 +1,4 @@
+"use client";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +27,7 @@ import { schemaSignUp } from "../schema";
 import useRegister from "../api/use-register";
 
 const SignUpCard = () => {
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
   const form = useForm<z.infer<typeof schemaSignUp>>({
     resolver: zodResolver(schemaSignUp),
     defaultValues: {
@@ -73,6 +74,7 @@ const SignUpCard = () => {
                       {...field}
                       type="text"
                       placeholder="Enter name"
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -89,6 +91,7 @@ const SignUpCard = () => {
                       {...field}
                       type="email"
                       placeholder="Enter email address"
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -105,14 +108,14 @@ const SignUpCard = () => {
                       {...field}
                       type="password"
                       placeholder="Enter password"
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <Button className="w-full" size={"lg"}>
+            <Button className="w-full" size={"lg"} disabled={isPending}>
               Sign up
             </Button>
           </form>
@@ -122,11 +125,19 @@ const SignUpCard = () => {
         <DottedSeparator />
       </div>
       <CardContent className="flex flex-col gap-4 mt-4">
-        <Button className="w-full gap-x-2" variant={"secondary"}>
+        <Button
+          className="w-full gap-x-2"
+          variant={"secondary"}
+          disabled={isPending}
+        >
           <FcGoogle />
           Sign up with Google
         </Button>
-        <Button className="w-full gap-x-2" variant={"outline"}>
+        <Button
+          className="w-full gap-x-2"
+          variant={"outline"}
+          disabled={isPending}
+        >
           <FaGithub />
           Sign up with Github
         </Button>
