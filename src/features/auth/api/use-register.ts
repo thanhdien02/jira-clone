@@ -30,6 +30,9 @@ const useRegister = () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },
+    onError: () => {
+      toast.error("Failed to register");
+    },
   });
   return mutation;
 };

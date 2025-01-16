@@ -1,5 +1,6 @@
 // In Next.js, this file would be called: app/providers.tsx
 "use client";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import {
@@ -47,6 +48,8 @@ export default function QueryProvider({ children }: ProvidersProps) {
   const queryClient = getQueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <NuqsAdapter>{children}</NuqsAdapter>
+    </QueryClientProvider>
   );
 }
