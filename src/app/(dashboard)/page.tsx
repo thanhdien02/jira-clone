@@ -6,6 +6,7 @@ export default async function Dashboard() {
   if (!user?.$id) redirect("/sign-in");
 
   const workspaces = await getWorkspaces();
+  console.log("🚀 ~ Dashboard ~ workspaces:", workspaces)
   
   if (workspaces.total === 0) {
     redirect("/workspaces/create");

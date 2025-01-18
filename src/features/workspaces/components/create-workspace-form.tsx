@@ -136,6 +136,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                     {field.value ? (
                       <Button
                         variant={"destructive"}
+                        type={"button"}
                         className="w-fit"
                         disabled={isPending}
                         size={"xs"}
@@ -180,7 +181,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 Cancel
               </Button>
               <Button
-                type="button"
+                type="submit"
                 size={"lg"}
                 className="w-fit ml-auto"
                 disabled={isPending}
