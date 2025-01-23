@@ -43,6 +43,8 @@ const app = new Hono()
         uploadedImageUrl = `data:image/png;base64,${Buffer.from(
           arrayBuffer
         ).toString("base64")}`;
+      } else {
+        uploadedImageUrl = "";
       }
       const workspace = await databases.createDocument(
         DATABASE_ID,
@@ -247,6 +249,38 @@ const app = new Hono()
     );
 
     return c.json({ data: workspaces });
+  })
+  .delete("/:workspaceId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { workspaceId } = c.req.param();
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId,
+    });
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const members = await databases.listDocuments<Member>(
+      DATABASE_ID,
+      MEMBERS_ID,
+      [Query.equal("workspaceId", workspaceId)]
+    );
+
+    if (members.total > 0) {
+      await Promise.all(
+        members.documents.map(async (member) => {
+          return databases.deleteDocument(DATABASE_ID, MEMBERS_ID, member.$id);
+        })
+      );
+    }
+
+    await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
+
+    return c.json({ data: { $id: workspaceId } }, 200);
   });
 
 export default app;

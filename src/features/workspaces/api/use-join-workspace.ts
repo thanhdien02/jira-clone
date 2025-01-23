@@ -35,7 +35,7 @@ const useJoinWorkspace = () => {
     onSuccess: ({ data }) => {
       toast.success("Joined workspace");
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace"] });
+      queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
       router.push(`/workspaces/${data?.$id}`);
     },
     onError: () => {

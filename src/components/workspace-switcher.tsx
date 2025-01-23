@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,6 @@ import WorkspaceAvatar from "@/features/workspaces/components/workspace-avatar";
 import { RiAddCircleFill } from "react-icons/ri";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
-import { useRouter } from "next/navigation";
 import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-workspace-modal";
 
 const WorkspaceSwitcher = () => {
@@ -25,6 +25,7 @@ const WorkspaceSwitcher = () => {
   const onSelect = (id: string) => {
     router.push(`/workspaces/${id}`);
   };
+
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex justify-between items-center">

@@ -33,6 +33,7 @@ import useGetWorkspace from "../api/use-get-workspace";
 import { toast } from "sonner";
 import useResetInviteCode from "../api/use-update-invite-code";
 import useConfirm from "@/hooks/use-confirm";
+import useDeleteWorkspace from "../api/use-delete-workspace ";
 
 interface EditWorkspaceFormProps {
   onCancel?: () => void;
@@ -42,6 +43,8 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
     useUpdateWorkspace();
   const { mutate: mutateRestInvite, isPending: isPendingResetInvite } =
     useResetInviteCode();
+  const { mutate: mutateDelete, isPending: isPendingDelete } =
+    useDeleteWorkspace();
 
   const [ResetDialog, confirmReset] = useConfirm(
     "Reset invite link",
@@ -94,12 +97,20 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
     const ok = await confirmDelete();
     if (!ok) return;
 
+    mutateDelete(
+      { param: { workspaceId } },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+      }
+    );
     // To do delete workspaces
   };
   useEffect(() => {
     if (workspace?.$id && workspace?.inviteCode) {
       form.setValue("name", workspace?.name);
-      form.setValue("image", workspace?.imageUrl);
+      form.setValue("image", workspace?.imageUrl ? workspace?.imageUrl : "");
       setLinkInviteCode(
         `${window.location.origin}/workspaces/${workspaceId}/join/${workspace?.inviteCode}`
       );
@@ -311,6 +322,7 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
             <Button
               className="flex ml-auto w-fit"
               size={"sm"}
+              disabled={isPendingDelete}
               variant={"destructive"}
               onClick={handleDeleteWorkspace}
             >
