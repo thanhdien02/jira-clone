@@ -20,7 +20,7 @@ const ProjectList = () => {
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
-        <p className="font-medium text-neutral-500 text-sm">PROJECTS</p>
+        <p className="font-medium text-neutral-500 text-sm">PROJECTS1</p>
         <RiAddCircleFill
           onClick={open}
           className="size-5 text-neutral-500 rounded-full cursor-pointer"
