@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 const ProjectList = () => {
   const { open } = useCreateProjectModal();
   const pathname = usePathname();
-  console.log("🚀 ~ ProjectList ~ pathname:", pathname);
   const workspaceId = useWorkspaceId();
   const { data: projects, isLoading } = useGetProjects({ workspaceId });
 
@@ -28,7 +27,7 @@ const ProjectList = () => {
       </div>
       {isLoading ? (
         <div className="w-full flex items-center justify-center min-h-[50px]">
-          <Loader className="size-5 animate-spin text-neutral-500"></Loader>{" "}
+          <Loader className="size-5 animate-spin text-neutral-500"></Loader>
         </div>
       ) : (
         <div className="flex flex-col gap-y-3">
@@ -50,7 +49,7 @@ const ProjectList = () => {
                 ) : (
                   <Avatar className="size-5 bg-blue-500 rounded-md">
                     <AvatarFallback className="uppercase bg-inherit text-white text-lg">
-                      {project?.name.charAt(0)}
+                      {project?.name.trim().charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                 )}

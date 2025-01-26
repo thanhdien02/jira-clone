@@ -38,7 +38,7 @@ const SignInCard = () => {
     mutate(data);
   };
   return (
-    <Card className="w-full h-full md:w-[487] border-none shadow-none">
+    <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader>
         <CardTitle className="text-xl text-center">Welcome back!</CardTitle>
       </CardHeader>

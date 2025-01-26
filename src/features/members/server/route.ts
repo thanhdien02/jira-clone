@@ -7,6 +7,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { getMember } from "../queries";
 import { updateMemberSchema } from "../schema";
+import { createAdminClient } from "@/lib/appwrite";
 
 const app = new Hono()
   .get(
@@ -20,6 +21,7 @@ const app = new Hono()
     ),
     async (c) => {
       const user = c.get("user");
+      const { users } = await createAdminClient();
       const databases = c.get("databases");
       const { workspaceId } = c.req.valid("query");
 
@@ -36,8 +38,20 @@ const app = new Hono()
         MEMBERS_ID,
         [Query.equal("workspaceId", workspaceId)]
       );
+     
+      const populatedMembers = await Promise.all(
+        members.documents.map(async (member) => {
+          const user = await users.get(member.userId);
 
-      return c.json({ data: members });
+          return {
+            ...member,
+            name: user.name || user.email,
+            email: user.email,
+          }
+        })
+      );
+      
+      return c.json({ data: populatedMembers });
     }
   )
   .patch(

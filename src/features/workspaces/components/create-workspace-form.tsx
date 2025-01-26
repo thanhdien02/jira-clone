@@ -156,8 +156,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                         type="button"
                         disabled={isPending}
                         size={"xs"}
-                        onClick={(e) => {
-                          e.preventDefault();
+                        onClick={() => {
                           refImage.current?.click();
                         }}
                       >
