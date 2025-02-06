@@ -33,7 +33,7 @@ import useGetWorkspace from "../api/use-get-workspace";
 import { toast } from "sonner";
 import useResetInviteCode from "../api/use-update-invite-code";
 import useConfirm from "@/hooks/use-confirm";
-import useDeleteWorkspace from "../api/use-delete-workspace ";
+import useDeleteWorkspace from "../api/use-delete-workspace";
 
 interface EditWorkspaceFormProps {
   onCancel?: () => void;

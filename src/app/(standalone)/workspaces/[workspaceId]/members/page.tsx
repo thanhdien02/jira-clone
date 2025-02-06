@@ -6,7 +6,7 @@ const MemberPage = async () => {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  return <MemberClient />;
+  return <MemberClient userId={user.$id}/>;
 };
 
 export default MemberPage;

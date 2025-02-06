@@ -60,6 +60,57 @@ const app = new Hono()
       return c.json({ data: project });
     }
   )
+  .patch(
+    "/:projectId",
+    sessionMiddleware,
+    zValidator("form", createProjectSchema),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const storage = c.get("storage");
+      const { projectId } = c.req.param();
+      const { name, workspaceId, image } = c.req.valid("form");
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      let updatedImageUrl: string | undefined;
+
+      if (image instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          image
+        );
+        const arrayBuffer = await storage.getFilePreview(
+          IMAGES_BUCKET_ID,
+          file.$id
+        );
+        updatedImageUrl = `data:image/png;base64,${Buffer.from(
+          arrayBuffer
+        ).toString("base64")}`;
+      } else {
+        updatedImageUrl = image;
+      }
+
+      const project = await databases.updateDocument(
+        DATABASE_ID,
+        PROJECTS_ID,
+        projectId,
+        {
+          name,
+          imageUrl: updatedImageUrl,
+        }
+      );
+
+      return c.json({ data: project });
+    }
+  )
   .get(
     "/",
     sessionMiddleware,
@@ -93,6 +144,41 @@ const app = new Hono()
         [Query.equal("workspaceId", workspaceId), Query.orderDesc("$createdAt")]
       );
 
+      return c.json({ data: projects });
+    }
+  )
+  .get(
+    "/:projectId",
+    sessionMiddleware,
+    zValidator(
+      "query",
+      z.object({
+        workspaceId: z.string(),
+      })
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { projectId } = c.req.param();
+      const { workspaceId } = c.req.valid("query");
+      if (!workspaceId) {
+        return c.json({ error: "Missing workspaceId" }, 400);
+      }
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const projects = await databases.getDocument<Project>(
+        DATABASE_ID,
+        PROJECTS_ID,
+        projectId
+      );
       return c.json({ data: projects });
     }
   );

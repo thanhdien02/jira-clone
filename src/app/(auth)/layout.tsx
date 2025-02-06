@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
     <main className="min-h-screen bg-neutral-100">
       <div className="max-w-screen-2xl mx-auto p-4">
         <nav className="flex justify-between">
-          <Image src="/logo.svg" width={152} height={56} alt="logo" />
+          <Image src="/logo.svg" width={152} priority height={56} alt="logo" />
           <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
             <Button variant="secondary">
               {isSignIn ? "Sign up" : "Sign in"}

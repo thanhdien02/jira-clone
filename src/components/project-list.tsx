@@ -30,7 +30,7 @@ const ProjectList = () => {
           <Loader className="size-5 animate-spin text-neutral-500"></Loader>
         </div>
       ) : (
-        <div className="flex flex-col gap-y-3">
+        <div className="flex flex-col gap-y-1">
           {projects?.documents?.map((project) => {
             const href: string = `/workspaces/${workspaceId}/projects/${project.$id}`;
             const isActive = pathname === href;

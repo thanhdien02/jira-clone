@@ -38,7 +38,7 @@ const app = new Hono()
         MEMBERS_ID,
         [Query.equal("workspaceId", workspaceId)]
       );
-     
+
       const populatedMembers = await Promise.all(
         members.documents.map(async (member) => {
           const user = await users.get(member.userId);
@@ -47,11 +47,37 @@ const app = new Hono()
             ...member,
             name: user.name || user.email,
             email: user.email,
-          }
+          };
         })
       );
-      
+
       return c.json({ data: populatedMembers });
+    }
+  )
+  .get(
+    "/info",
+    sessionMiddleware,
+    zValidator(
+      "query",
+      z.object({
+        workspaceId: z.string(),
+        userId: z.string(),
+      })
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { workspaceId } = c.req.valid("query");
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      return c.json({ data: member });
     }
   )
   .patch(
@@ -94,6 +120,39 @@ const app = new Hono()
 
       return c.json({ data: memberId });
     }
-  );
+  )
+  .delete("/:memberId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { memberId } = c.req.param();
+
+    const memberToDelete = await databases.getDocument<Member>(
+      DATABASE_ID,
+      MEMBERS_ID,
+      memberId
+    );
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: memberToDelete.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    if (member.role !== "ADMIN") {
+      if (memberId === member.$id) {
+        await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
+        return c.json({ data: memberId });
+      }
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
+
+    return c.json({ data: memberId });
+  });
 
 export default app;
