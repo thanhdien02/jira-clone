@@ -1,6 +1,6 @@
 "use client";
 
-import ResponsiveModal from "@/components/ResponsiveModal";
+import ResponsiveModal from "@/components/responsive-modal";
 import useCreateProjectModal from "../hooks/use-create-project-modal";
 import CreateProjectForm from "./create-project-form";
 

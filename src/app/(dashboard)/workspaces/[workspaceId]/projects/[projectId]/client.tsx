@@ -1,15 +1,13 @@
 "use client";
-import { DottedSeparator } from "@/components/dotted-separator";
 import { AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import useGetProject from "@/features/projects/api/use-get-project";
 import ProjectAvatar from "@/features/projects/components/project-avatar";
 import useEditProjectModal from "@/features/projects/hooks/use-edit-project-modal";
 import useProjectId from "@/features/projects/hooks/use-project-id";
-import TaskTable from "@/features/tasks/components/task-table";
-import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
+
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 import { Avatar } from "@radix-ui/react-avatar";
 import { Loader } from "lucide-react";
@@ -17,7 +15,7 @@ import { MdOutlineEdit } from "react-icons/md";
 
 const ProjectIdClient = () => {
   const { open: openEditProject } = useEditProjectModal();
-  const { open: openCreateTask } = useCreateTaskModal();
+
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   const { data: project, isLoading } = useGetProject({
@@ -59,36 +57,7 @@ const ProjectIdClient = () => {
           Edit project
         </Button>
       </div>
-      <Card className="p-5 shadow-none">
-        <Tabs defaultValue="account" className="w-[400px]">
-          <TabsList className="gap-x-4 bg-white">
-            <TabsTrigger value="account" className="!shadow-none bg-white">
-              Table
-            </TabsTrigger>
-            <TabsTrigger value="password" className="!shadow-none bg-white">
-              Kanban
-            </TabsTrigger>
-            <TabsTrigger value="calender" className="!shadow-none bg-white">
-              Calender
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="account">
-            <TaskTable />
-          </TabsContent>
-          <TabsContent value="password">
-            kanban
-          </TabsContent>
-          <TabsContent value="calender">Calender.</TabsContent>
-        </Tabs>
-        <DottedSeparator className="w-full my-5" />
-        <Button
-          type="button"
-          className="flex ml-auto w-fit"
-          onClick={openCreateTask}
-        >
-          Add new task
-        </Button>
-      </Card>
+      <TaskViewSwitcher />
     </main>
   );
 };

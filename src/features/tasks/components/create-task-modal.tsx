@@ -1,6 +1,6 @@
 "use client";
 
-import ResponsiveModal from "@/components/ResponsiveModal";
+import ResponsiveModal from "@/components/responsive-modal";
 import CreateTaskForm from "./create-task-form";
 import useCreateTaskModal from "../hooks/use-create-task-modal";
 import useGetMembers from "@/features/members/api/use-get-members";
@@ -14,12 +14,12 @@ const CreateTaskModal = () => {
   const { data: projects } = useGetProjects({ workspaceId });
   const dataMembers =
     members?.map((member) => ({ id: member.$id, name: member.name })) || [];
+
   const dataProjects =
     projects?.documents.map((project) => ({
       id: project.$id,
       name: project.name,
     })) || [];
-  // get members of the workspace
   return (
     <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
       <CreateTaskForm

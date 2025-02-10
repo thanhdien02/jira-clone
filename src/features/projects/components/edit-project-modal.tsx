@@ -1,6 +1,6 @@
 "use client";
 
-import ResponsiveModal from "@/components/ResponsiveModal";
+import ResponsiveModal from "@/components/responsive-modal";
 import useEditProjectModal from "../hooks/use-edit-project-modal";
 import useGetProject from "../api/use-get-project";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";

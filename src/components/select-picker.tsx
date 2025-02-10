@@ -29,11 +29,11 @@ const SelectPicker = ({
       <SelectContent>
         <SelectGroup>
           {data?.map((member) => (
-            <SelectItem key={member.id} value={member.id} className="h-12">
+            <SelectItem key={member.id} value={member.id}>
               <div className="!flex !flex-row justify-start items-center gap-x-2">
-                <Avatar className="bg-blue-500 rounded-sm size-9">
+                <Avatar className="bg-blue-500 rounded-sm size-6">
                   <AvatarFallback className="font-medium text-lg uppercase text-white bg-blue-500">
-                    {member.name.charAt(0)}
+                    {member?.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-medium">{member.name}</span>

@@ -1,4 +1,4 @@
-import ResponsiveModal from "@/components/ResponsiveModal";
+import ResponsiveModal from "@/components/responsive-modal";
 import { Button, ButtonProps } from "@/components/ui/button";
 import {
   Card,
