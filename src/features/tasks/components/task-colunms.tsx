@@ -12,8 +12,13 @@ import TaskAction from "./task-action";
 export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "name",
-    header: () => (
-      <Button variant={"ghost"}>
+    header: ({ column }) => (
+      <Button
+        variant={"ghost"}
+        onClick={() => {
+          column.toggleSorting(column.getIsSorted() === "asc");
+        }}
+      >
         Task Name <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
@@ -74,10 +79,13 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: "dueDate",
-    header: ({column}) => (
-      <Button variant={"ghost"} onClick={()=>{
-        column.toggleSorting(column.getIsSorted() === "asc");
-      }}>
+    header: ({ column }) => (
+      <Button
+        variant={"ghost"}
+        onClick={() => {
+          column.toggleSorting(column.getIsSorted() === "asc");
+        }}
+      >
         Due Date <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
@@ -89,10 +97,13 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: "status",
-    header: ({column}) => (
-      <Button variant={"ghost"} onClick={()=> {
-        column.toggleSorting(column.getIsSorted() === "asc");
-      }}>
+    header: ({ column }) => (
+      <Button
+        variant={"ghost"}
+        onClick={() => {
+          column.toggleSorting(column.getIsSorted() === "asc");
+        }}
+      >
         Status <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),

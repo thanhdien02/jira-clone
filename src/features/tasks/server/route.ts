@@ -19,7 +19,7 @@ export const app = new Hono()
       z.object({
         projectId: z.string(),
         workspaceId: z.string(),
-        search: z.string().nullish(),
+        search: z.string().optional().nullish(),
         assigneeId: z.string().nullish(),
         status: z.nativeEnum(TaskStatus).nullish(),
         dueDate: z.string().nullish(),

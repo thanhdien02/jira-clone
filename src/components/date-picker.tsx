@@ -15,6 +15,7 @@ import {
 
 interface DatePickerProps {
   value: Date | undefined;
+  // eslint-disable-next-line no-unused-vars
   onChange: (date: Date) => void;
   className?: string;
   placeholder?: string;

@@ -10,11 +10,21 @@ import useGetTasks from "../api/use-get-tasks";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 import useProjectId from "@/features/projects/hooks/use-project-id";
 import { Loader } from "lucide-react";
+import TaskFilter from "./task-filter";
+import useTaskFilters from "../hooks/use-task-filters";
 
 const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  const { data, isLoading } = useGetTasks({ workspaceId, projectId });
+  const [{ status, assigneeId, dueDate, search }] = useTaskFilters();
+  const { data, isLoading } = useGetTasks({
+    workspaceId,
+    projectId,
+    status,
+    dueDate,
+    assigneeId,
+    search,
+  });
   const { open: openCreateTask } = useCreateTaskModal();
   if (isLoading)
     return (
@@ -22,34 +32,39 @@ const TaskViewSwitcher = () => {
         <Loader className="size-6 animate-spin text-neutral-500" />
       </div>
     );
+
   return (
     <Card className="p-5 shadow-none">
-      <Tabs defaultValue="account" className="">
+      <Tabs defaultValue="table" className="">
         <TabsList className="gap-x-4 bg-white">
-          <TabsTrigger value="account" className="!shadow-none bg-white">
+          <TabsTrigger value="table" className="!shadow-none bg-white">
             Table
           </TabsTrigger>
-          <TabsTrigger value="password" className="!shadow-none bg-white">
+          <TabsTrigger value="kanban" className="!shadow-none bg-white">
             Kanban
           </TabsTrigger>
           <TabsTrigger value="calender" className="!shadow-none bg-white">
             Calender
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="account" className="w-full">
+        <DottedSeparator className="w-full my-5" />
+        <div className="flex justify-between items-center">
+          <TaskFilter />
+          <Button
+            type="button"
+            className="flex ml-auto w-fit mt-5"
+            onClick={openCreateTask}
+          >
+            Add new task
+          </Button>
+        </div>
+        <DottedSeparator className="w-full my-5" />
+        <TabsContent value="table" className="w-full">
           <TaskTable data={data?.documents || []} columns={columns} />
         </TabsContent>
-        <TabsContent value="password">kanban</TabsContent>
+        <TabsContent value="kanban">kanban</TabsContent>
         <TabsContent value="calender">Calender.</TabsContent>
       </Tabs>
-      <DottedSeparator className="w-full my-5" />
-      <Button
-        type="button"
-        className="flex ml-auto w-fit"
-        onClick={openCreateTask}
-      >
-        Add new task
-      </Button>
     </Card>
   );
 };

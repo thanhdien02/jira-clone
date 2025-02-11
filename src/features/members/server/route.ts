@@ -51,7 +51,7 @@ const app = new Hono()
         })
       );
 
-      return c.json({ data: populatedMembers });
+      return c.json({ data: { ...member, documents: populatedMembers } });
     }
   )
   .get(

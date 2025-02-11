@@ -13,7 +13,7 @@ const CreateTaskModal = () => {
   const { data: members } = useGetMembers({ workspaceId });
   const { data: projects } = useGetProjects({ workspaceId });
   const dataMembers =
-    members?.map((member) => ({ id: member.$id, name: member.name })) || [];
+    members?.documents.map((member) => ({ id: member.$id, name: member.name })) || [];
 
   const dataProjects =
     projects?.documents.map((project) => ({
