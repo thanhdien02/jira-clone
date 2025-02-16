@@ -44,7 +44,7 @@ const TaskFilter = () => {
   };
 
   return (
-    <div className="flex items-center gap-x-4">
+    <div className="flex items-center flex-wrap md:flex-nowrap gap-4 w-full">
       <Select defaultValue={status ?? undefined} onValueChange={onChangeStatus}>
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex items-center pr-2">

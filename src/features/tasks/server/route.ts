@@ -1,7 +1,7 @@
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createTaskSchema } from "../schema";
+import { createTaskSchema, updateTaskSchema } from "../schema";
 import { getMember } from "@/features/members/queries";
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
@@ -170,6 +170,73 @@ export const app = new Hono()
         }
       );
 
+      return c.json({ data: task });
+    }
+  )
+  .patch(
+    "/:taskId",
+    sessionMiddleware,
+    zValidator("json", updateTaskSchema.partial()),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { name, projectId, status, description, assigneeId, dueDate } =
+        c.req.valid("json");
+      const { taskId } = c.req.param();
+
+      const existingTask = await databases.getDocument<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        taskId
+      );
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: existingTask.workspaceId,
+      });
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const task = await databases.updateDocument(
+        DATABASE_ID,
+        TASKS_ID,
+        taskId,
+        {
+          name,
+          description,
+          assigneeId,
+          projectId,
+          status,
+          dueDate,
+        }
+      );
+      return c.json({ data: task });
+    }
+  )
+  .get(
+    "/:taskId",
+    sessionMiddleware,
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { taskId } = c.req.param();
+
+      const task = await databases.getDocument<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        taskId
+      );
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: task.workspaceId,
+      });
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
       return c.json({ data: task });
     }
   );

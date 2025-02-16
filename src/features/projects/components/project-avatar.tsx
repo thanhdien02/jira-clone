@@ -9,7 +9,7 @@ interface ProjectAvatarProps {
 }
 const ProjectAvatar = ({ name, src, className }: ProjectAvatarProps) => {
   return (
-    <>
+    <div>
       {src ? (
         <div
           className={cn(
@@ -26,12 +26,12 @@ const ProjectAvatar = ({ name, src, className }: ProjectAvatarProps) => {
         </div>
       ) : (
         <Avatar className="size-5 bg-blue-500 rounded-md">
-          <AvatarFallback className="font-medium text-white uppercase bg-blue-500">
+          <AvatarFallback className="font-medium text-white uppercase bg-blue-500 text-xs">
             {name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
       )}
-    </>
+    </div>
   );
 };
 

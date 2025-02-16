@@ -3,6 +3,7 @@ import Sidebar from "@/components/sidebar";
 import CreateProjectModal from "@/features/projects/components/create-project-modal";
 import EditProjectModal from "@/features/projects/components/edit-project-modal";
 import CreateTaskModal from "@/features/tasks/components/create-task-modal";
+import EditTaskModal from "@/features/tasks/components/edit-task-modal";
 import CreateWorkspaceModal from "@/features/workspaces/components/create-workspace-modal";
 
 interface LayoutProps {
@@ -16,6 +17,7 @@ const Layout = ({ children }: LayoutProps) => {
       <CreateProjectModal />
       <CreateTaskModal/>
       <EditProjectModal />
+      <EditTaskModal />
       <div className="hidden lg:block fixed top-0 left-0 w-[267px] h-full bg-neutral-100 overflow-y-auto">
         <Sidebar />
       </div>

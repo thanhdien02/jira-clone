@@ -26,36 +26,42 @@ const ProjectIdClient = () => {
   return (
     <main className="p-5 flex flex-col gap-y-5">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-x-3">
-          {isLoading ? (
-            <div className="size-10 rounded-md flex items-center justify-center bg-neutral-100">
-              <Loader className="size-4 animate-spin" />
+        {isLoading ? (
+          <div className="size-10"></div>
+        ) : (
+          <>
+            <div className="flex items-center gap-x-3">
+              {isLoading ? (
+                <div className="size-10 rounded-md flex items-center justify-center bg-neutral-100">
+                  <Loader className="size-4 animate-spin" />
+                </div>
+              ) : project?.imageUrl ? (
+                <ProjectAvatar
+                  name="Project Avatar"
+                  className="size-10"
+                  src={project?.imageUrl as string}
+                />
+              ) : (
+                <Avatar className="size-10 rounded-md bg-blue-500">
+                  <AvatarFallback className="bg-blue-500 text-white text-lg font-medium">
+                    {project?.name?.trim().charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <h1 className="text-lg font-medium">{project?.name}</h1>
             </div>
-          ) : project?.imageUrl ? (
-            <ProjectAvatar
-              name="Project Avatar"
-              className="size-10"
-              src={project?.imageUrl as string}
-            />
-          ) : (
-            <Avatar className="size-10 rounded-md bg-blue-500">
-              <AvatarFallback className="bg-blue-500 text-white text-lg font-medium">
-                {project?.name?.trim().charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          )}
-          <h1 className="text-lg font-medium">{project?.name}</h1>
-        </div>
-        <Button
-          size={"sm"}
-          variant={"outline"}
-          className="shadow-none"
-          disabled={isLoading}
-          onClick={openEditProject}
-        >
-          <MdOutlineEdit className="mr-2" size={"16"} />
-          Edit project
-        </Button>
+            <Button
+              size={"sm"}
+              variant={"outline"}
+              className="shadow-none"
+              disabled={isLoading}
+              onClick={openEditProject}
+            >
+              <MdOutlineEdit className="mr-2" size={"16"} />
+              Edit project
+            </Button>
+          </>
+        )}
       </div>
       <TaskViewSwitcher />
     </main>

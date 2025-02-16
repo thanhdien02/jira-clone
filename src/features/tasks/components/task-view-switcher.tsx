@@ -1,7 +1,7 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { columns } from "@/features/tasks/components/task-colunms";
+import { columns } from "@/features/tasks/components/table-colunms";
 import TaskTable from "@/features/tasks/components/task-table";
 import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
 import { DottedSeparator } from "@/components/dotted-separator";
@@ -12,10 +12,15 @@ import useProjectId from "@/features/projects/hooks/use-project-id";
 import { Loader } from "lucide-react";
 import TaskFilter from "./task-filter";
 import useTaskFilters from "../hooks/use-task-filters";
+import TaskKanban from "./task-kanban";
+import { useQueryState } from "nuqs";
 
 const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
+  const [view, setView] = useQueryState("task-view", {
+    defaultValue: "table",
+  });
   const [{ status, assigneeId, dueDate, search }] = useTaskFilters();
   const { data, isLoading } = useGetTasks({
     workspaceId,
@@ -26,16 +31,9 @@ const TaskViewSwitcher = () => {
     search,
   });
   const { open: openCreateTask } = useCreateTaskModal();
-  if (isLoading)
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <Loader className="size-6 animate-spin text-neutral-500" />
-      </div>
-    );
-
   return (
     <Card className="p-5 shadow-none">
-      <Tabs defaultValue="table" className="">
+      <Tabs defaultValue={view} onValueChange={setView}>
         <TabsList className="gap-x-4 bg-white">
           <TabsTrigger value="table" className="!shadow-none bg-white">
             Table
@@ -48,22 +46,33 @@ const TaskViewSwitcher = () => {
           </TabsTrigger>
         </TabsList>
         <DottedSeparator className="w-full my-5" />
-        <div className="flex justify-between items-center">
+        <div className="flex md:flex-row flex-col justify-between items-center gap-4">
           <TaskFilter />
           <Button
             type="button"
-            className="flex ml-auto w-fit mt-5"
+            className="md:w-fit w-full"
+            size={"sm"}
             onClick={openCreateTask}
           >
             Add new task
           </Button>
         </div>
         <DottedSeparator className="w-full my-5" />
-        <TabsContent value="table" className="w-full">
-          <TaskTable data={data?.documents || []} columns={columns} />
-        </TabsContent>
-        <TabsContent value="kanban">kanban</TabsContent>
-        <TabsContent value="calender">Calender.</TabsContent>
+        {isLoading ? (
+          <div className="py-20 w-full flex justify-center items-center">
+            <Loader className="size-6 animate-spin text-neutral-500" />
+          </div>
+        ) : (
+          <>
+            <TabsContent value="table" className="w-full">
+              <TaskTable data={data?.documents || []} columns={columns} />
+            </TabsContent>
+            <TabsContent value="kanban">
+              <TaskKanban data={data?.documents || []} />
+            </TabsContent>
+            <TabsContent value="calender">Calender.</TabsContent>
+          </>
+        )}
       </Tabs>
     </Card>
   );

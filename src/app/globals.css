@@ -78,3 +78,7 @@ body {
 .hide-scrollbar::--webkit-scrollbar {
   display: none;
 }
+/* fix css drawer of modal */
+[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{
+  height: 0px !important;
+}
