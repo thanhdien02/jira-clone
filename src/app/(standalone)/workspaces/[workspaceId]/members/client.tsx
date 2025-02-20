@@ -94,7 +94,7 @@ const MemberClient = ({ onCancel, userId }: MemberClientProps) => {
         {!isPending &&
           !isLoading &&
           !isPendingDelete &&
-          data?.map((member) => (
+          data?.documents.map((member) => (
             <div key={member.$id} className="flex items-center justify-between">
               <div className="flex items-center gap-x-3">
                 <Avatar className="rounded-md bg-blue-500">

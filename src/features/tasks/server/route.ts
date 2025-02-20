@@ -174,6 +174,71 @@ export const app = new Hono()
     }
   )
   .patch(
+    "/bulk-update",
+    sessionMiddleware,
+    zValidator(
+      "json",
+      z.array(
+        z.object({
+          $id: z.string(),
+          status: z.string(),
+          position: z.number(),
+        })
+      )
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const dataTasks = c.req.valid("json");
+
+      const tasksToUpdate = await databases.listDocuments<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        [
+          Query.contains(
+            "$id",
+            dataTasks.map((task) => task.$id)
+          ),
+        ]
+      );
+
+      const workspaceIds = new Set(
+        tasksToUpdate.documents.map((data) => data.workspaceId)
+      );
+      if (workspaceIds.size !== 1) {
+        return c.json({ error: "All tasks must belong to the same workspace" });
+      }
+      const workspaceId = workspaceIds.values().next().value;
+      console.log("🚀 ~ workspaceId:", workspaceId);
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: workspaceId as string,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const tasks = await Promise.all(
+        dataTasks?.map(async (dataTask) => {
+          const task = await databases.updateDocument(
+            DATABASE_ID,
+            TASKS_ID,
+            dataTask.$id,
+            {
+              status: dataTask.status,
+              position: dataTask.position,
+            }
+          );
+          return task;
+        })
+      );
+      return c.json({ data: tasks });
+    }
+  )
+  .patch(
     "/:taskId",
     sessionMiddleware,
     zValidator("json", updateTaskSchema.partial()),
@@ -215,29 +280,25 @@ export const app = new Hono()
       return c.json({ data: task });
     }
   )
-  .get(
-    "/:taskId",
-    sessionMiddleware,
-    async (c) => {
-      const user = c.get("user");
-      const databases = c.get("databases");
-      const { taskId } = c.req.param();
+  .get("/:taskId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { taskId } = c.req.param();
 
-      const task = await databases.getDocument<Task>(
-        DATABASE_ID,
-        TASKS_ID,
-        taskId
-      );
+    const task = await databases.getDocument<Task>(
+      DATABASE_ID,
+      TASKS_ID,
+      taskId
+    );
 
-      const member = await getMember({
-        databases,
-        userId: user.$id,
-        workspaceId: task.workspaceId,
-      });
-      if (!member) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
-      return c.json({ data: task });
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: task.workspaceId,
+    });
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
-  );
+    return c.json({ data: task });
+  });
 export default app;

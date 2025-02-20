@@ -14,10 +14,14 @@ import TaskFilter from "./task-filter";
 import useTaskFilters from "../hooks/use-task-filters";
 import TaskKanban from "./task-kanban";
 import { useQueryState } from "nuqs";
+import useUpdateBulkTasks from "../api/use-update-bulk-tasks";
+import { TaskStatus } from "../types";
+import TaskCalender from "./task-calendar";
 
 const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
+  const { mutate } = useUpdateBulkTasks();
   const [view, setView] = useQueryState("task-view", {
     defaultValue: "table",
   });
@@ -30,10 +34,19 @@ const TaskViewSwitcher = () => {
     assigneeId,
     search,
   });
+
   const { open: openCreateTask } = useCreateTaskModal();
+  const onBulkUpdate = (
+    tasks: { $id: string; status: TaskStatus; position: number }[]
+  ) => {
+    mutate({ json: tasks });
+  };
   return (
     <Card className="p-5 shadow-none">
-      <Tabs defaultValue={view} onValueChange={setView}>
+      <Tabs
+        defaultValue={view}
+        onValueChange={setView}
+      >
         <TabsList className="gap-x-4 bg-white">
           <TabsTrigger value="table" className="!shadow-none bg-white">
             Table
@@ -60,7 +73,7 @@ const TaskViewSwitcher = () => {
         <DottedSeparator className="w-full my-5" />
         {isLoading ? (
           <div className="py-20 w-full flex justify-center items-center">
-            <Loader className="size-6 animate-spin text-neutral-500" />
+            <Loader className="size-6 animate-spin text-neutral-500 " />
           </div>
         ) : (
           <>
@@ -68,9 +81,14 @@ const TaskViewSwitcher = () => {
               <TaskTable data={data?.documents || []} columns={columns} />
             </TabsContent>
             <TabsContent value="kanban">
-              <TaskKanban data={data?.documents || []} />
+              <TaskKanban
+                data={data?.documents || []}
+                onChange={onBulkUpdate}
+              />
             </TabsContent>
-            <TabsContent value="calender">Calender.</TabsContent>
+            <TabsContent value="calender">
+              <TaskCalender data={data?.documents || []} />
+            </TabsContent>
           </>
         )}
       </Tabs>

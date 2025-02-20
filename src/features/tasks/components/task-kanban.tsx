@@ -3,9 +3,9 @@ import {
   DragDropContext,
   Droppable,
   Draggable,
-  // type DropResult,
+  type DropResult,
 } from "@hello-pangea/dnd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Task, TaskStatus } from "../types";
 import KanbanColumn from "./kanban-column";
 import KanbanCard from "./kanban-card";
@@ -26,8 +26,16 @@ type TaskState = {
 };
 interface TaskKanbanProps {
   data: Task[];
+  onChange: (
+    // eslint-disable-next-line no-unused-vars
+    value: {
+      $id: string;
+      status: TaskStatus;
+      position: number;
+    }[]
+  ) => void;
 }
-const TaskKanban = ({ data }: TaskKanbanProps) => {
+const TaskKanban = ({ data, onChange }: TaskKanbanProps) => {
   const [tasks, setTasks] = useState<TaskState>(() => {
     const initialTasks: TaskState = {
       [TaskStatus.BACKLOG]: [],
@@ -65,9 +73,78 @@ const TaskKanban = ({ data }: TaskKanbanProps) => {
     setTasks(initialTasks);
   }, [data]);
 
-  
+  const handleDragEnd = useCallback(
+    (result: DropResult) => {
+      const { source, destination } = result;
+      const sourceStatus = result.source.droppableId as TaskStatus;
+      const destinationStatus = result.destination?.droppableId as TaskStatus;
+
+      if (!destination) return;
+
+      const updatesPayload: {
+        $id: string;
+        status: TaskStatus;
+        position: number;
+      }[] = [];
+
+      setTasks((prevTasks) => {
+        const newTasks = { ...prevTasks };
+        const tasksSource = prevTasks[sourceStatus];
+        const tasksDestination = prevTasks[destinationStatus];
+        const [movedTask] = tasksSource.splice(source.index, 1);
+        if (!movedTask) {
+          console.error("No task found at the source index");
+          return prevTasks;
+        }
+
+        newTasks[sourceStatus] = tasksSource;
+
+        const updatedMovedTask =
+          source.droppableId !== destination.droppableId
+            ? { ...movedTask, status: destinationStatus }
+            : movedTask;
+
+        tasksDestination.splice(destination.index, 0, updatedMovedTask);
+        newTasks[destinationStatus] = tasksDestination;
+        updatesPayload.push({
+          $id: updatedMovedTask.$id,
+          status: destinationStatus,
+          position: Math.min((destination.index + 1) * 1000, 1_000_000),
+        });
+
+        newTasks[destinationStatus].forEach((task, index) => {
+          const newPosition = Math.min((index + 1) * 1000, 1_000_000);
+          if (task.position !== newPosition) {
+            updatesPayload.push({
+              $id: task.$id,
+              status: task.status,
+              position: newPosition,
+            });
+          }
+        });
+
+        if (destinationStatus !== sourceStatus) {
+          newTasks[sourceStatus].forEach((task, index) => {
+            const newPosition = Math.min((index + 1) * 1000, 1_000_000);
+            if (task.position !== newPosition) {
+              updatesPayload.push({
+                $id: task.$id,
+                status: task.status,
+                position: newPosition,
+              });
+            }
+          });
+        }
+
+        return newTasks;
+      });
+      onChange(updatesPayload);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onchange]
+  );
   return (
-    <DragDropContext onDragEnd={() => {}}>
+    <DragDropContext onDragEnd={handleDragEnd}>
       <div className="flex overflow-x-auto">
         {boards.map((board) => (
           <div
