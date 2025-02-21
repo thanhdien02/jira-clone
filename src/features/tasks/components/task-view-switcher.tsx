@@ -41,20 +41,27 @@ const TaskViewSwitcher = () => {
   ) => {
     mutate({ json: tasks });
   };
+
   return (
     <Card className="p-5 shadow-none">
-      <Tabs
-        defaultValue={view}
-        onValueChange={setView}
-      >
-        <TabsList className="gap-x-4 bg-white">
-          <TabsTrigger value="table" className="!shadow-none bg-white">
+      <Tabs defaultValue={view} onValueChange={setView}>
+        <TabsList className="gap-4 bg-white h-full w-full md:w-auto">
+          <TabsTrigger
+            value="table"
+            className="!shadow-none bg-gray-100 flex-1"
+          >
             Table
           </TabsTrigger>
-          <TabsTrigger value="kanban" className="!shadow-none bg-white">
+          <TabsTrigger
+            value="kanban"
+            className="!shadow-none bg-gray-100 flex-1"
+          >
             Kanban
           </TabsTrigger>
-          <TabsTrigger value="calender" className="!shadow-none bg-white">
+          <TabsTrigger
+            value="calender"
+            className="!shadow-none bg-gray-100 flex-1"
+          >
             Calender
           </TabsTrigger>
         </TabsList>

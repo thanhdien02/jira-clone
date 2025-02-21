@@ -26,7 +26,7 @@ const useUpdateTask = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Updated tasks");
+      toast.success("Task updated");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task",  data.$id] });
     },

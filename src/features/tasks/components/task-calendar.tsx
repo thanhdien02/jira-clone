@@ -9,10 +9,7 @@ import {
 import { Task } from "../types";
 import { enUS } from "date-fns/locale";
 
-import {
-  Calendar,
-  dateFnsLocalizer,
-} from "react-big-calendar";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -100,6 +97,7 @@ const TaskCalender = ({ data }: TaskCalenderProps) => {
         views={["month"]}
         defaultView="month"
         toolbar
+        
         showAllEvents
         className="h-full"
         max={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
