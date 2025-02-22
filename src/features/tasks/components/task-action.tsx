@@ -9,6 +9,10 @@ import {
 import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import useEditTaskModal from "../hooks/use-edit-task-modal";
+import useDeleteTask from "../api/use-delete-task";
+import useConfirm from "@/hooks/use-confirm";
+import { useRouter } from "next/navigation";
+import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 
 interface TaskActionProps {
   taskId: string;
@@ -16,11 +20,31 @@ interface TaskActionProps {
 }
 const TaskAction = ({ children, taskId }: TaskActionProps) => {
   const { open } = useEditTaskModal();
+  const workspaceId = useWorkspaceId();
+  const router = useRouter();
+  const [ConfirmDeleteTaskDialog, confirmDeleteTask] = useConfirm(
+    "Delete task",
+    "This will delete the task",
+    "destructive"
+  );
+  const { mutate } = useDeleteTask();
+  const handleTaskDelete = async () => {
+    const ok = await confirmDeleteTask();
+    if (!ok) return;
+    mutate({ param: { taskId } });
+  };
+
   return (
     <DropdownMenu modal={false}>
+      <ConfirmDeleteTaskDialog />
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-[200px]">
-        <DropdownMenuItem className="font-medium p-[10px] cursor-pointer">
+        <DropdownMenuItem
+          className="font-medium p-[10px] cursor-pointer"
+          onClick={() => {
+            router.push(`/workspaces/${workspaceId}/tasks/${taskId}`);
+          }}
+        >
           <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
           Open Task
         </DropdownMenuItem>
@@ -37,7 +61,10 @@ const TaskAction = ({ children, taskId }: TaskActionProps) => {
           <PencilIcon className="size-4 mr-2 stroke-2" />
           Edit Task
         </DropdownMenuItem>
-        <DropdownMenuItem className="font-medium p-[10px] cursor-pointer text-destructive focus:text-destructive">
+        <DropdownMenuItem
+          className="font-medium p-[10px] cursor-pointer text-destructive focus:text-destructive"
+          onClick={handleTaskDelete}
+        >
           <TrashIcon className="size-4 mr-2 stroke-2" />
           Remove Task
         </DropdownMenuItem>

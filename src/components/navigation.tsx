@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 const routes = [
   {
-    href: "/",
+    href: "",
     label: "Home",
     icon: GoHome,
     isActiveIcon: GoHomeFill,

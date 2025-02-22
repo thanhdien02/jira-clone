@@ -11,6 +11,76 @@ import { Project } from "@/features/projects/types";
 import { Member } from "@/features/members/types";
 import { createAdminClient } from "@/lib/appwrite";
 export const app = new Hono()
+  .get("/:taskId", sessionMiddleware, async (c) => {
+    const { users } = await createAdminClient();
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { taskId } = c.req.param();
+
+    const task = await databases.getDocument<Task>(
+      DATABASE_ID,
+      TASKS_ID,
+      taskId
+    );
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: task.workspaceId,
+    });
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      task.projectId
+    );
+    const assignee = await databases.getDocument<Member>(
+      DATABASE_ID,
+      MEMBERS_ID,
+      task.assigneeId
+    );
+    const userInfo = await users.get(assignee.userId);
+
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee: {
+          ...assignee,
+          name: userInfo.name || userInfo.email,
+          email: userInfo.email,
+        },
+      },
+    });
+  })
+  .delete("/:taskId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { taskId } = c.req.param();
+
+    const taskToDelete = await databases.getDocument<Task>(
+      DATABASE_ID,
+      TASKS_ID,
+      taskId
+    );
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: taskToDelete.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const task = await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+
+    return c.json({ data: task });
+  })
   .get(
     "/",
     sessionMiddleware,
@@ -279,26 +349,5 @@ export const app = new Hono()
       );
       return c.json({ data: task });
     }
-  )
-  .get("/:taskId", sessionMiddleware, async (c) => {
-    const user = c.get("user");
-    const databases = c.get("databases");
-    const { taskId } = c.req.param();
-
-    const task = await databases.getDocument<Task>(
-      DATABASE_ID,
-      TASKS_ID,
-      taskId
-    );
-
-    const member = await getMember({
-      databases,
-      userId: user.$id,
-      workspaceId: task.workspaceId,
-    });
-    if (!member) {
-      return c.json({ error: "Unauthorized" }, 401);
-    }
-    return c.json({ data: task });
-  });
+  );
 export default app;

@@ -5,6 +5,7 @@ import TaskClient from "./client";
 const WorkspaceIdPage = async () => {
   const user = await getCurrentUser();
   if (!user?.$id) redirect("/sign-in");
+  
   return <TaskClient />;
 };
 

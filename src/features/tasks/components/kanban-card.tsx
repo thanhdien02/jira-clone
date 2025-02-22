@@ -17,7 +17,7 @@ const KanbanCard = ({ data }: KanbanCardProps) => {
     <div className="bg-white rounded-md p-2 my-2 min-h-[100px]">
       <div className="flex justify-between items-center">
         <div className="text-sm line-clamp-2">{data.name}</div>
-        <TaskAction taskId="">
+        <TaskAction taskId={data.$id}>
           <DotsHorizontalIcon className="size-4 text-neutral-500" />
         </TaskAction>
       </div>

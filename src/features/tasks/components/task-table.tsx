@@ -29,7 +29,6 @@ function TaskTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  console.log("🚀 ~ data:", data)
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({

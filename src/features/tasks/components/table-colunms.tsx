@@ -25,7 +25,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const name = row.original.name;
 
-      return <p className="line-clamp-1 font-medium">{name}</p>;
+      return <p className="line-clamp-1 font-medium max-w-[200px]">{name}</p>;
     },
   },
   {

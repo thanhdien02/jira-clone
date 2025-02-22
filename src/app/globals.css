@@ -82,3 +82,12 @@ body {
 [data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{
   height: 0px !important;
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

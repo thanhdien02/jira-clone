@@ -1,10 +1,11 @@
 import { getCurrentUser } from "@/features/auth/queries";
 import { redirect } from "next/navigation";
+import DashboardWorkspaceClient from "./client";
 
 const WorkspaceIdPage = async () => {
   const user = await getCurrentUser();
   if (!user?.$id) redirect("/sign-in");
-  return <div className="p-6">Workspace ID:</div>;
+  return <DashboardWorkspaceClient />;
 };
 
 export default WorkspaceIdPage;
