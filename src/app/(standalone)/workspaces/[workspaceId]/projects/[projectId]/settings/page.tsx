@@ -1,13 +1,13 @@
 import { getCurrentUser } from "@/features/auth/queries";
-import EditWorkspaceForm from "@/features/workspaces/components/edit-workspace-form";
 import { redirect } from "next/navigation";
+import ProjectSettingsClient from "./client";
 
-const SettingsPage = async () => {
+const ProjectSettings = async () => {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/sign-in");
   }
-  return <EditWorkspaceForm />;
+  return <ProjectSettingsClient />;
 };
 
-export default SettingsPage;
+export default ProjectSettings;

@@ -4,18 +4,17 @@ import { Button } from "@/components/ui/button";
 
 import useGetProject from "@/features/projects/api/use-get-project";
 import ProjectAvatar from "@/features/projects/components/project-avatar";
-import useEditProjectModal from "@/features/projects/hooks/use-edit-project-modal";
 import useProjectId from "@/features/projects/hooks/use-project-id";
 import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
 
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 import { Avatar } from "@radix-ui/react-avatar";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { MdOutlineEdit } from "react-icons/md";
 
 const ProjectIdClient = () => {
-  const { open: openEditProject } = useEditProjectModal();
-
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   const { data: project, isLoading } = useGetProject({
@@ -55,7 +54,11 @@ const ProjectIdClient = () => {
               variant={"outline"}
               className="shadow-none"
               disabled={isLoading}
-              onClick={openEditProject}
+              onClick={() => {
+                router.push(
+                  `/workspaces/${workspaceId}/projects/${projectId}/settings`
+                );
+              }}
             >
               <MdOutlineEdit className="mr-2" size={"16"} />
               Edit project

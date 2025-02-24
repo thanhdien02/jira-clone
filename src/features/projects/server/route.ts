@@ -1,12 +1,13 @@
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createProjectSchema } from "../schema";
+import { createProjectSchema, updateProjectSchema } from "../schema";
 import { getMember } from "@/features/members/queries";
-import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID } from "@/config";
+import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
 import { z } from "zod";
 import { Project } from "../types";
+import { Task } from "@/features/tasks/types";
 
 const app = new Hono()
   .post(
@@ -63,7 +64,7 @@ const app = new Hono()
   .patch(
     "/:projectId",
     sessionMiddleware,
-    zValidator("form", createProjectSchema),
+    zValidator("form", updateProjectSchema),
     async (c) => {
       const user = c.get("user");
       const databases = c.get("databases");
@@ -75,6 +76,7 @@ const app = new Hono()
         userId: user.$id,
         workspaceId,
       });
+      console.log("🚀 ~ image:", image);
 
       if (!member) {
         return c.json({ error: "Unauthorized" }, 401);
@@ -97,6 +99,7 @@ const app = new Hono()
       } else {
         updatedImageUrl = image;
       }
+      console.log("🚀 ~ updatedImageUrql:", updatedImageUrl);
 
       const project = await databases.updateDocument(
         DATABASE_ID,
@@ -181,6 +184,59 @@ const app = new Hono()
       );
       return c.json({ data: projects });
     }
-  );
+  )
+  .delete("/:projectId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { projectId } = c.req.param();
+
+    if (!projectId) {
+      return c.json({ error: "Missing projectId" }, 400);
+    }
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: project.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+      Query.equal("projectId", projectId),
+    ]);
+    const deletedTasks = await Promise.all(
+      tasks.documents?.map(async (task) => {
+        const deletedTask = await databases.deleteDocument(
+          DATABASE_ID,
+          TASKS_ID,
+          task.$id
+        );
+
+        return deletedTask;
+      })
+    );
+
+    const deletedProject = await databases.deleteDocument(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+
+    return c.json({
+      data: {
+        project: deletedProject,
+        tasks: deletedTasks,
+      },
+    });
+  });
 
 export default app;

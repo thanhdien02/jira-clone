@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { TaskStatus } from "../types";
 
 interface UseGetTasksProps {
-  projectId: string;
   workspaceId: string;
-  search: string | null;
-  assigneeId: string | null;
-  status: TaskStatus | null;
-  dueDate: string | null;
+  projectId?: string | null;
+  search?: string | null;
+  assigneeId?: string | null;
+  status?: TaskStatus | null;
+  dueDate?: string | null;
 }
 const useGetTasks = ({
   workspaceId,
@@ -32,7 +32,7 @@ const useGetTasks = ({
       const response = await client.api.tasks.$get({
         query: {
           workspaceId,
-          projectId,
+          projectId: projectId ?? undefined,
           search: search ?? undefined,
           assigneeId: assigneeId ?? undefined,
           status: status ?? undefined,

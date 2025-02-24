@@ -66,7 +66,7 @@ const TaskViewSwitcher = () => {
           </TabsTrigger>
         </TabsList>
         <DottedSeparator className="w-full my-5" />
-        <div className="flex md:flex-row flex-col justify-between items-center gap-4">
+        <div className="flex md:flex-row  lg:flex-nowrap flex-wrap flex-col justify-between items-center gap-4">
           <TaskFilter />
           <Button
             type="button"

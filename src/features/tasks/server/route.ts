@@ -87,7 +87,7 @@ export const app = new Hono()
     zValidator(
       "query",
       z.object({
-        projectId: z.string(),
+        projectId: z.string().nullish(),
         workspaceId: z.string(),
         search: z.string().optional().nullish(),
         assigneeId: z.string().nullish(),
@@ -111,9 +111,12 @@ export const app = new Hono()
       if (!member) return c.json({ error: "Unauthorized" }, 404);
 
       const queries = [
-        Query.equal("projectId", projectId),
+        Query.equal("workspaceId", workspaceId),
         Query.orderDesc("$createdAt"),
       ];
+      if (projectId) {
+        queries.push(Query.equal("projectId", projectId));
+      }
       if (search) {
         queries.push(Query.search("name", search));
       }

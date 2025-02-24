@@ -9,7 +9,7 @@ interface ProjectAvatarProps {
 }
 const ProjectAvatar = ({ name, src, className }: ProjectAvatarProps) => {
   return (
-    <div>
+    <>
       {src ? (
         <div
           className={cn(
@@ -31,7 +31,7 @@ const ProjectAvatar = ({ name, src, className }: ProjectAvatarProps) => {
           </AvatarFallback>
         </Avatar>
       )}
-    </div>
+    </>
   );
 };
 

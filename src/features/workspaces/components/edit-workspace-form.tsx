@@ -250,6 +250,7 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
                   </div>
                 )}
               />
+              
               <DottedSeparator className="my-4" />
               <div className="flex justify-between items-center">
                 <Button

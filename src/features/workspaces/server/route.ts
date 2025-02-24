@@ -298,35 +298,7 @@ const app = new Hono()
     if (!member) {
       return c.json({ error: "Unauthorized" }, 401);
     }
-    // const now = new Date();
-    // const thisMonthStart = startOfMonth(now);
-    // const thisMonthEnd = endOfMonth(now);
-    // const lastMonthStart = startOfMonth(subMonths(now, 1));
-    // const lastMonthEnd = endOfMonth(subMonths(now, 1));
-
-    // // tasks
-
-    // const thisMonthTasks = await databases.listDocuments<Task>(
-    //   DATABASE_ID,
-    //   TASKS_ID,
-    //   [
-    //     Query.equal("workspaceId", workspaceId),
-    //     Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
-    //     Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
-    //   ]
-    // );
-    // const lastMonthTasks = await databases.listDocuments<Task>(
-    //   DATABASE_ID,
-    //   TASKS_ID,
-    //   [
-    //     Query.equal("workspaceId", workspaceId),
-    //     Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
-    //     Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
-    //   ]
-    // );
-
-    // const taskCount = thisMonthTasks.total;
-    // const taskDifferent = taskCount - lastMonthTasks.total;
+    
     const now = new Date();
     const thisMonthStart = startOfMonth(now);
     const thisMonthEnd = endOfMonth(now);
