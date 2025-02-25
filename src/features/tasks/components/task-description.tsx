@@ -21,7 +21,6 @@ const TaskDescription = ({ data }: TaskDescriptionProps) => {
   const debounced = useDebouncedCallback(
     // function
     (value: string) => {
-      console.log("object: " + value);
       setDescription(value);
     },
     // delay in ms

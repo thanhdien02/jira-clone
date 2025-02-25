@@ -16,6 +16,7 @@ import { Task } from "@/features/tasks/types";
 import useGetWorkspaceStatistics from "@/features/workspaces/api/use-get-workspace-statistics";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 import { Loader, PlusIcon } from "lucide-react";
+import { IoMdSettings } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
 const DashboardWorkspaceClient = () => {
@@ -77,7 +78,7 @@ const TaskList = ({ data }: TaskListProps) => {
         <h2 className="text-lg font-medium text-gray-900">Task List</h2>
         <Button
           className="text-sm"
-          variant="ghost"
+          variant="muted"
           size={"icon"}
           onClick={() => {
             open();
@@ -134,7 +135,7 @@ const ProjectList = ({ data }: ProjectListProps) => {
         <h2 className="text-lg font-medium text-gray-900">Project List</h2>
         <Button
           className="text-sm"
-          variant="ghost"
+          variant="muted"
           size={"icon"}
           onClick={() => {
             open();
@@ -170,19 +171,22 @@ interface MemberListProps {
   data: Member[];
 }
 const MemberList = ({ data }: MemberListProps) => {
+  const workspaceId = useWorkspaceId();
+  const router = useRouter();
+
   return (
-    <div className="p-5 border border-gray-100 rounded-lg h-fit">
+    <div className="p-5 border border-gray-100 rounded-lg h-fit max-h-[250px] overflow-y-auto hide-scrollbar">
       <div className="mb-5 flex justify-between items-center">
         <h2 className="text-lg font-medium text-gray-900">Members</h2>
         <Button
           className="text-sm"
-          variant="ghost"
+          variant="muted"
           size={"icon"}
           onClick={() => {
-            // open();
+            router.push(`/workspaces/${workspaceId}/members`);
           }}
         >
-          <PlusIcon className="size-5 text-neutral-500" />
+          <IoMdSettings className="size-5 text-neutral-500" />
         </Button>
       </div>
       <div className="grid md:grid-cols-2 grid-cols-1 gap-4">

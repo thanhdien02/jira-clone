@@ -76,7 +76,6 @@ const app = new Hono()
         userId: user.$id,
         workspaceId,
       });
-      console.log("🚀 ~ image:", image);
 
       if (!member) {
         return c.json({ error: "Unauthorized" }, 401);
@@ -99,7 +98,6 @@ const app = new Hono()
       } else {
         updatedImageUrl = image;
       }
-      console.log("🚀 ~ updatedImageUrql:", updatedImageUrl);
 
       const project = await databases.updateDocument(
         DATABASE_ID,

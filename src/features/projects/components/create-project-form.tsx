@@ -40,7 +40,6 @@ const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
     },
   });
   const onSubmit = (data: z.infer<typeof createProjectSchema>) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     const finalData = {
       ...data,
       image: data.image instanceof File ? data.image : "",
@@ -55,7 +54,6 @@ const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log("🚀 ~ handleImageChange ~ file:", file);
     if (file) {
       form.setValue("image", file);
     }

@@ -25,6 +25,7 @@ import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 import { schemaSignUp } from "../schema";
 import useRegister from "../api/use-register";
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
 
 const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
@@ -37,7 +38,6 @@ const SignUpCard = () => {
     },
   });
   const onSubmit = (data: z.infer<typeof schemaSignUp>) => {
-    console.log(data);
     mutate(data);
   };
   return (
@@ -129,6 +129,9 @@ const SignUpCard = () => {
           className="w-full gap-x-2"
           variant={"secondary"}
           disabled={isPending}
+          onClick={() => {
+            signUpWithGoogle();
+          }}
         >
           <FcGoogle />
           Sign up with Google
@@ -137,6 +140,9 @@ const SignUpCard = () => {
           className="w-full gap-x-2"
           variant={"outline"}
           disabled={isPending}
+          onClick={() => {
+            signUpWithGithub();
+          }}
         >
           <FaGithub />
           Sign up with Github

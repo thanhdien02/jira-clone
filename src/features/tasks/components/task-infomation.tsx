@@ -47,9 +47,12 @@ const TaskInformation = ({ data }: TaskInformationProps) => {
           Edit
         </Button>
       </div>
-      <div className="flex flex-col gap-y-3">
-        <div>
-          <p className="line-clamp-1 w-full">{data?.name}</p>
+      <div className="flex flex-col gap-y-3 mt-4">
+        <div className="flex items-center gap-x-5 !justify-start">
+          <p className="line-clamp-1 font-medium">{data?.name}</p>
+          <Badge variant={data?.status as TaskStatus} className="shrink-0">
+            {snakeCaseToTitleCase(data?.status as string)}
+          </Badge>
         </div>
 
         <div className="flex items-center gap-x-3 flex-wrap">
@@ -58,18 +61,15 @@ const TaskInformation = ({ data }: TaskInformationProps) => {
               name="Project"
               src={data?.project.imageUrl as string}
             />
-            <p className="max-w-[120px] truncate">{data?.project.name}</p>
+            <p className="max-w-[150px] truncate">{data?.project.name}</p>
           </div>
           <div className=" text-neutral-500 flex items-center gap-x-2">
             <MemberAvatar name="Assignee" key={data?.assignee.name} />
-            <p className="max-w-[120px] truncate">{data?.assignee.name}</p>
+            <p className="max-w-[150px] truncate">{data?.assignee.name}</p>
           </div>
         </div>
         <div className="flex items-center gap-x-3">
-          <Badge variant={data?.status as TaskStatus}>
-            {snakeCaseToTitleCase(data?.status as string)}
-          </Badge>
-          <p className={cn("text-sm", textColor)}>
+          <p className={cn("", textColor)}>
             {format(data?.dueDate as string, "PPP")}
           </p>
         </div>

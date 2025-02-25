@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { schemaLogin } from "../schema";
 import useLogin from "../api/use-login";
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
 
 const SignInCard = () => {
   const { mutate, isPending } = useLogin();
@@ -99,6 +100,9 @@ const SignInCard = () => {
           className="w-full gap-x-2"
           variant={"secondary"}
           disabled={isPending}
+          onClick={() => {
+            signUpWithGoogle();
+          }}
         >
           <FcGoogle />
           Login with Google
@@ -107,6 +111,9 @@ const SignInCard = () => {
           className="w-full gap-x-2"
           variant={"outline"}
           disabled={isPending}
+          onClick={() => {
+            signUpWithGithub();
+          }}
         >
           <FaGithub />
           Login with Github
