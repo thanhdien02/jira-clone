@@ -411,7 +411,7 @@ const app = new Hono()
       [
         Query.equal("workspaceId", workspaceId),
         Query.notEqual("status", TaskStatus.DONE),
-        Query.greaterThan("dueDate", now.toISOString()),
+        Query.lessThan("dueDate", now.toISOString()),
         Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
         Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
       ]
@@ -422,7 +422,7 @@ const app = new Hono()
       [
         Query.equal("workspaceId", workspaceId),
         Query.notEqual("status", TaskStatus.DONE),
-        Query.greaterThan("dueDate", now.toISOString()),
+        Query.lessThan("dueDate", now.toISOString()),
         Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
         Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
       ]

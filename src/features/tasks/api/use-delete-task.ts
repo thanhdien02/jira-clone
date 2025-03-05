@@ -29,6 +29,9 @@ const useDeleteTask = () => {
     },
     onSuccess: () => {
       toast.success("Deleted task");
+      queryClient.invalidateQueries({
+        queryKey: ["workspace-tasks-statistics"],
+      });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: () => {

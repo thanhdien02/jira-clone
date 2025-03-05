@@ -8,7 +8,7 @@ const useGetWorkspaceStatistics = ({
   workspaceId,
 }: UseGetWorkspacesStatisticsProps) => {
   const query = useQuery({
-    queryKey: ["workspace-tasks-statistics"],
+    queryKey: ["workspace-tasks-statistics", workspaceId],
     queryFn: async () => {
       const response = await client.api.workspaces[
         ":workspaceId"

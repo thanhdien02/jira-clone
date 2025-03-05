@@ -27,8 +27,12 @@ const useUpdateTask = () => {
     },
     onSuccess: ({ data }) => {
       toast.success("Task updated");
+
+      queryClient.invalidateQueries({
+        queryKey: ["workspace-tasks-statistics"],
+      });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      queryClient.invalidateQueries({ queryKey: ["task",  data.$id] });
+      queryClient.invalidateQueries({ queryKey: ["task", data.$id] });
     },
     onError: () => {
       toast.error("Failed to update tasks");

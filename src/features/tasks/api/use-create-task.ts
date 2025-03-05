@@ -21,8 +21,12 @@ const useCreateTask = () => {
     },
     onSuccess: ({ data }) => {
       toast.success("Created task");
+
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", data.$id] });
+      queryClient.invalidateQueries({
+        queryKey: ["workspace-tasks-statistics"],
+      });
     },
     onError: () => {
       toast.success("Failed to create task1");
