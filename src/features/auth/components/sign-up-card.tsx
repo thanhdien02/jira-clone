@@ -41,7 +41,7 @@ const SignUpCard = () => {
     mutate(data);
   };
   return (
-    <Card className="w-full h-full md:w-[487] border-none shadow-none">
+    <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader>
         <CardTitle className="text-xl">Sign Up</CardTitle>
         <CardDescription className="line-clamp-2">
