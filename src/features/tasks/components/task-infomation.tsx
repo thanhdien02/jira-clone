@@ -59,7 +59,7 @@ const TaskInformation = ({ data }: TaskInformationProps) => {
           <div className="flex items-center gap-x-2">
             <ProjectAvatar
               name="Project"
-              src={data?.project.imageUrl as string}
+              image={data?.project.imageUrl as string}
             />
             <p className="max-w-[150px] truncate">{data?.project.name}</p>
           </div>

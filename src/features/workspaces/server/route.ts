@@ -6,6 +6,7 @@ import {
   DATABASE_ID,
   IMAGES_BUCKET_ID,
   MEMBERS_ID,
+  PROJECTS_ID,
   TASKS_ID,
   WORKSPACES_ID,
 } from "@/config";
@@ -17,6 +18,7 @@ import { getMember } from "@/features/members/queries";
 import { Workspace } from "../types";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import { Task, TaskStatus } from "@/features/tasks/types";
+import { Project } from "@/features/projects/types";
 
 const app = new Hono()
   .post(
@@ -276,7 +278,45 @@ const app = new Hono()
     if (members.total > 0) {
       await Promise.all(
         members.documents.map(async (member) => {
-          return databases.deleteDocument(DATABASE_ID, MEMBERS_ID, member.$id);
+          return await databases.deleteDocument(
+            DATABASE_ID,
+            MEMBERS_ID,
+            member.$id
+          );
+        })
+      );
+    }
+
+    // projects
+    const projects = await databases.listDocuments<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      [Query.equal("workspaceId", workspaceId)]
+    );
+    if (projects.total > 0) {
+      await Promise.all(
+        projects.documents.map(async (project) => {
+          return await databases.deleteDocument(
+            DATABASE_ID,
+            PROJECTS_ID,
+            project.$id
+          );
+        })
+      );
+    }
+
+    // tasks
+    const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+      Query.equal("workspaceId", workspaceId),
+    ]);
+    if (tasks.total > 0) {
+      await Promise.all(
+        tasks.documents.map(async (task) => {
+          return await databases.deleteDocument(
+            DATABASE_ID,
+            TASKS_ID,
+            task.$id
+          );
         })
       );
     }
@@ -298,7 +338,7 @@ const app = new Hono()
     if (!member) {
       return c.json({ error: "Unauthorized" }, 401);
     }
-    
+
     const now = new Date();
     const thisMonthStart = startOfMonth(now);
     const thisMonthEnd = endOfMonth(now);

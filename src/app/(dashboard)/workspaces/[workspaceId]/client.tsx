@@ -15,7 +15,7 @@ import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
 import { Task } from "@/features/tasks/types";
 import useGetWorkspaceStatistics from "@/features/workspaces/api/use-get-workspace-statistics";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
-import { Loader, PlusIcon } from "lucide-react";
+import { Loader, PlusIcon, TriangleAlert } from "lucide-react";
 import { IoMdSettings } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
@@ -39,15 +39,19 @@ const DashboardWorkspaceClient = () => {
     isMemberLoading ||
     isProjectLoading ||
     isStatisticLoading ||
-    isTaskLoading ||
-    !data ||
-    !dataTaskList ||
-    !dataProjectList ||
-    !dataMemberList
+    isTaskLoading
   ) {
     return (
       <div className="py-80 flex items-center justify-center">
         <Loader className="size-5 text-neutral-500 animate-spin" />
+      </div>
+    );
+  }
+  if (!data || !dataTaskList || !dataProjectList || !dataMemberList) {
+    return (
+      <div className="h-[calc(100vh-73px)] flex flex-col items-center justify-center gap-y-3">
+        <TriangleAlert className="size-6 text-neutral-500" />
+        <p className="text-base font-medium text-neutral-500">No data found.</p>
       </div>
     );
   }
@@ -156,7 +160,7 @@ const ProjectList = ({ data }: ProjectListProps) => {
             className="cursor-pointer flex items-center gap-x-2 
             bg-white px-3 py-2 rounded-md shadow-md w-full h-fit"
           >
-            <ProjectAvatar name={project.name} src={project.imageUrl} />
+            <ProjectAvatar name={project.name} image={project.imageUrl} />
             <p className="text-base font-medium text-gray-900 line-clamp-1">
               {project.name}
             </p>

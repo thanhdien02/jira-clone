@@ -1,37 +1,19 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface ProjectAvatarProps {
-  src: string;
+  image: string;
   name: string;
   className?: string;
 }
-const ProjectAvatar = ({ name, src, className }: ProjectAvatarProps) => {
+const ProjectAvatar = ({ name, image, className }: ProjectAvatarProps) => {
   return (
-    <>
-      {src ? (
-        <div
-          className={cn(
-            "size-5 relative rounded-md overflow-hidden shrink-0",
-            className
-          )}
-        >
-          <Image
-            src={src}
-            alt={name}
-            fill
-            className="object-cover rounded-md"
-          />
-        </div>
-      ) : (
-        <Avatar className="size-5 bg-blue-500 rounded-md">
-          <AvatarFallback className="font-medium text-white uppercase bg-blue-500 text-xs">
-            {name.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      )}
-    </>
+    <Avatar className={cn("size-6 bg-blue-500 rounded-md", className)}>
+      <AvatarImage src={image} alt="Image" />
+      <AvatarFallback className="font-medium text-white uppercase bg-blue-500 text-sm">
+        {name.charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
   );
 };
 

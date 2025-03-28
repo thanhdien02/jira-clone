@@ -1,4 +1,17 @@
 "use client";
+
+import { TaskStatus } from "../types";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
+import { createTaskSchema } from "../schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/date-picker";
+import SelectPicker from "@/components/select-picker";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,16 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
-import { createTaskSchema } from "../schema";
-import { DatePicker } from "@/components/date-picker";
-import SelectPicker from "@/components/select-picker";
+
 import {
   Select,
   SelectContent,
@@ -27,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TaskStatus } from "../types";
+
 import useCreateTask from "../api/use-create-task";
 
 interface CreateTaskFormProps {
@@ -54,9 +58,7 @@ const CreateTaskForm = ({
     mutate(data, {
       onSuccess: () => {
         form.reset();
-        if (onCancel) {
-          onCancel();
-        }
+        if (onCancel) onCancel();
       },
     });
   };

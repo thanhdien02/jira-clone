@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { toast } from "sonner";
 import { client } from "@/lib/rpc";
 import { InferRequestType, InferResponseType } from "hono";
-import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 
 type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 200>;
 type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>["json"];
@@ -20,7 +20,7 @@ const useCreateTask = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Created task");
+      toast.success("Task created");
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", data.$id] });
@@ -29,7 +29,7 @@ const useCreateTask = () => {
       });
     },
     onError: () => {
-      toast.success("Failed to create task1");
+      toast.success("Failed to create task");
     },
   });
   return mutation;

@@ -3,8 +3,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OAuthProvider } from "node-appwrite";
-
 import { createAdminClient } from "@/lib/appwrite";
+
 
 export async function signUpWithGithub() {
   const { account } = await createAdminClient();

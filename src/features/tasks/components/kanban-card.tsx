@@ -18,7 +18,7 @@ const KanbanCard = ({ data }: KanbanCardProps) => {
       <div className="flex justify-between items-center">
         <div className="text-sm line-clamp-2">{data.name}</div>
         <TaskAction taskId={data.$id}>
-          <DotsHorizontalIcon className="size-4 text-neutral-500" />
+          <DotsHorizontalIcon className="size-4 text-neutral-500 cursor-pointer" />
         </TaskAction>
       </div>
       <DottedSeparator className="my-2" />
@@ -31,7 +31,7 @@ const KanbanCard = ({ data }: KanbanCardProps) => {
         <div className="flex items-center gap-3">
           <ProjectAvatar
             name={data?.project?.name}
-            src={data?.project?.imageUrl}
+            image={data?.project?.imageUrl}
           />
           <div className="text-xs">{data?.project?.name}</div>
         </div>

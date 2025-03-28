@@ -42,7 +42,6 @@ const app = new Hono()
       const populatedMembers = await Promise.all(
         members.documents.map(async (member) => {
           const user = await users.get(member.userId);
-
           return {
             ...member,
             name: user.name || user.email,
@@ -139,17 +138,39 @@ const app = new Hono()
     });
 
     if (!member) {
-      return c.json({ error: "Unauthorized" }, 401);
+      return c.json({ error: "Unauthorized2" }, 401);
     }
 
     if (member.role !== "ADMIN") {
+      // out workspace
       if (memberId === member.$id) {
         await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
         return c.json({ data: memberId });
       }
-      return c.json({ error: "Unauthorized" }, 401);
+      return c.json({ error: "Unauthorized1" }, 401);
     }
 
+    // if user out is admin
+    if (memberId === member.$id) {
+      const members = await databases.listDocuments<Member>(
+        DATABASE_ID,
+        MEMBERS_ID,
+        [Query.equal("workspaceId", memberToDelete.workspaceId)]
+      );
+      const memberFinal = members.documents.filter(
+        (member) => member.$id !== memberId
+      );
+      if (memberFinal.length > 0) {
+        await databases.updateDocument(
+          DATABASE_ID,
+          MEMBERS_ID,
+          memberFinal[0].$id,
+          {
+            role: MemberRole.ADMIN,
+          }
+        );
+      }
+    }
     await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
 
     return c.json({ data: memberId });

@@ -162,6 +162,7 @@ const app = new Hono()
       const databases = c.get("databases");
       const { projectId } = c.req.param();
       const { workspaceId } = c.req.valid("query");
+
       if (!workspaceId) {
         return c.json({ error: "Missing workspaceId" }, 400);
       }
@@ -211,14 +212,14 @@ const app = new Hono()
     const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
       Query.equal("projectId", projectId),
     ]);
-    const deletedTasks = await Promise.all(
+
+    await Promise.all(
       tasks.documents?.map(async (task) => {
         const deletedTask = await databases.deleteDocument(
           DATABASE_ID,
           TASKS_ID,
           task.$id
         );
-
         return deletedTask;
       })
     );
@@ -231,8 +232,7 @@ const app = new Hono()
 
     return c.json({
       data: {
-        project: deletedProject,
-        tasks: deletedTasks,
+        deletedProject,
       },
     });
   });

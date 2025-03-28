@@ -1,27 +1,31 @@
 "use client";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQueryState } from "nuqs";
+import { TaskStatus } from "../types";
+import { Loader } from "lucide-react";
+
 import { columns } from "@/features/tasks/components/table-colunms";
-import TaskTable from "@/features/tasks/components/task-table";
-import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import TaskTable from "@/features/tasks/components/task-table";
+import TaskFilter from "./task-filter";
+import TaskKanban from "./task-kanban";
+import TaskCalender from "./task-calendar";
+
+import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
 import useGetTasks from "../api/use-get-tasks";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 import useProjectId from "@/features/projects/hooks/use-project-id";
-import { Loader } from "lucide-react";
-import TaskFilter from "./task-filter";
+
 import useTaskFilters from "../hooks/use-task-filters";
-import TaskKanban from "./task-kanban";
-import { useQueryState } from "nuqs";
 import useUpdateBulkTasks from "../api/use-update-bulk-tasks";
-import { TaskStatus } from "../types";
-import TaskCalender from "./task-calendar";
+
 
 const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  const { mutate } = useUpdateBulkTasks();
+  const { mutate: mutateUpdateBulkTasks } = useUpdateBulkTasks();
   const [view, setView] = useQueryState("task-view", {
     defaultValue: "table",
   });
@@ -36,10 +40,11 @@ const TaskViewSwitcher = () => {
   });
 
   const { open: openCreateTask } = useCreateTaskModal();
+
   const onBulkUpdate = (
     tasks: { $id: string; status: TaskStatus; position: number }[]
   ) => {
-    mutate({ json: tasks });
+    mutateUpdateBulkTasks({ json: tasks });
   };
 
   return (
@@ -80,7 +85,7 @@ const TaskViewSwitcher = () => {
         <DottedSeparator className="w-full my-5" />
         {isLoading ? (
           <div className="py-20 w-full flex justify-center items-center">
-            <Loader className="size-6 animate-spin text-neutral-500 " />
+            <Loader className="size-5 animate-spin text-neutral-500" />
           </div>
         ) : (
           <>

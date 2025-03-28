@@ -15,7 +15,7 @@ const Layout = ({ children }: LayoutProps) => {
     <main className="min-h-screen w-full">
       <CreateWorkspaceModal />
       <CreateProjectModal />
-      <CreateTaskModal/>
+      <CreateTaskModal />
       <EditProjectModal />
       <EditTaskModal />
       <div className="hidden lg:block fixed top-0 left-0 w-[267px] h-full bg-neutral-100 overflow-y-auto">
@@ -23,9 +23,7 @@ const Layout = ({ children }: LayoutProps) => {
       </div>
       <div className="lg:ml-[267px]">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="">
-            <Navbar />
-          </div>
+          <Navbar />
           <div>{children}</div>
         </div>
       </div>

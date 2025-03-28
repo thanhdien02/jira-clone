@@ -1,16 +1,18 @@
 "use client";
-import { DottedSeparator } from "@/components/dotted-separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import useGetWorkspaceInfo from "@/features/workspaces/api/use-get-workspace-info";
-import useJoinWorkspace from "@/features/workspaces/api/use-join-workspace";
-import useJoinInviteCode from "@/features/workspaces/hooks/use-join-invite-code";
-import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
-import { ArrowLeftIcon, Loader } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { ArrowLeftIcon, Loader, TriangleAlert } from "lucide-react";
+import useGetWorkspaceInfo from "@/features/workspaces/api/use-get-workspace-info";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { DottedSeparator } from "@/components/dotted-separator";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+import useJoinWorkspace from "@/features/workspaces/api/use-join-workspace";
+import useJoinInviteCode from "@/features/workspaces/hooks/use-join-invite-code";
+import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 const JoinWorkspaceClient = () => {
   const router = useRouter();
   const inviteCode = useJoinInviteCode();
@@ -24,10 +26,22 @@ const JoinWorkspaceClient = () => {
     mutateJoin({ json: { code: inviteCode }, param: { workspaceId } });
   };
 
-  if (!isLoading) {
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Loader className="animation-spin size-4 text-neutral-500" />
-    </div>;
+  if (isLoading) {
+    return (
+      <div className="w-full h-[calc(100vh-105px)] flex justify-center items-center">
+        <Loader className="animate-spin size-6 text-neutral-500" />
+      </div>
+    );
+  }
+  if (!workspaceInfo) {
+    return (
+      <div className="w-full h-[calc(100vh-105px)] flex flex-col gap-y-3 justify-center items-center">
+        <TriangleAlert className="size-6 text-neutral-500" />
+        <p className="text-base text-neutral-500 font-medium">
+          No found Information
+        </p>
+      </div>
+    );
   }
   return (
     <Card className="w-full lg:max-w-xl outline-none border-none shadow-none">

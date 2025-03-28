@@ -47,8 +47,8 @@ const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
     };
     mutate(finalData, {
       onSuccess: ({ data }) => {
-        form.reset();
         router.push(`/workspaces/${workspaceId}/projects/${data.$id}`);
+        form.reset();
       },
     });
   };
@@ -115,8 +115,8 @@ const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                         alt="Image workspace"
                       />
                     ) : (
-                      <Avatar className="size-[72px]">
-                        <AvatarFallback>
+                      <Avatar className="size-[72px] rounded-md">
+                        <AvatarFallback className="rounded-md">
                           <ImageIcon className="size-[36px] text-neutral-400" />
                         </AvatarFallback>
                       </Avatar>

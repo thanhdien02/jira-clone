@@ -38,7 +38,7 @@ const ProjectIdClient = () => {
                 <ProjectAvatar
                   name="Project Avatar"
                   className="size-10"
-                  src={project?.imageUrl as string}
+                  image={project?.imageUrl as string}
                 />
               ) : (
                 <Avatar className="size-10 rounded-md bg-blue-500">

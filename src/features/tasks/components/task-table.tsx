@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -19,7 +21,6 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,7 +46,6 @@ function TaskTable<TData, TValue>({
       columnFilters,
     },
   });
-
   return (
     <div className="rounded-md border">
       <Table className="overflow-x-auto">
@@ -90,8 +90,8 @@ function TaskTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      
       <div className="flex justify-end items-center gap-x-4 m-4 ">
-       
         <Button
           size={"sm"}
           variant="secondary"

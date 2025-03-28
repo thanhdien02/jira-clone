@@ -1,4 +1,19 @@
 "use client";
+import { toast } from "sonner";
+import Image from "next/image";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { cn, generateInviteCode } from "@/lib/utils";
+
+import { createWorkspaceSchema } from "../schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ArrowLeftIcon, Copy, ImageIcon, Loader } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { DottedSeparator } from "@/components/dotted-separator";
 import {
   Card,
@@ -15,24 +30,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createWorkspaceSchema } from "../schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeftIcon, Copy, ImageIcon, Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { cn, generateInviteCode } from "@/lib/utils";
+import useConfirm from "@/hooks/use-confirm";
+
 import useWorkspaceId from "../hooks/use-workspace-id";
 import useUpdateWorkspace from "../api/use-update-workspace";
 import useGetWorkspace from "../api/use-get-workspace";
-import { toast } from "sonner";
 import useResetInviteCode from "../api/use-update-invite-code";
-import useConfirm from "@/hooks/use-confirm";
 import useDeleteWorkspace from "../api/use-delete-workspace";
 
 interface EditWorkspaceFormProps {
@@ -105,7 +108,6 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
         },
       }
     );
-    // To do delete workspaces
   };
   useEffect(() => {
     if (workspace?.$id && workspace?.inviteCode) {
@@ -136,9 +138,7 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
             size="sm"
             variant="secondary"
             onClick={
-              onCancel
-                ? onCancel
-                : () => router.push(`/workspaces/${workspaceId}`)
+              onCancel || (() => router.push(`/workspaces/${workspaceId}`))
             }
           >
             <ArrowLeftIcon className="size-4 mr-2" />
@@ -193,8 +193,8 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
                           alt="Image workspace"
                         />
                       ) : (
-                        <Avatar className="size-[72px]">
-                          <AvatarFallback>
+                        <Avatar className="size-[72px] rounded-md">
+                          <AvatarFallback className="rounded-md">
                             <ImageIcon className="size-[36px] text-neutral-400" />
                           </AvatarFallback>
                         </Avatar>
@@ -250,7 +250,6 @@ const EditWorkspaceForm = ({ onCancel }: EditWorkspaceFormProps) => {
                   </div>
                 )}
               />
-              
               <DottedSeparator className="my-4" />
               <div className="flex justify-between items-center">
                 <Button

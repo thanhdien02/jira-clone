@@ -44,7 +44,7 @@ const ProjectSettingsClient = () => {
     workspaceId,
   });
   const { mutate, isPending } = useUpdateProject();
-  const { mutate: mutateProject, isPending: isProjectPending } =
+  const { mutate: mutateDeleteProject, isPending: isDeleteProjectPending } =
     useDeleteProject();
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete project",
@@ -84,7 +84,7 @@ const ProjectSettingsClient = () => {
     if (!ok) {
       return;
     }
-    mutateProject(
+    mutateDeleteProject(
       { param: { projectId } },
       {
         onSuccess: () => {
@@ -164,8 +164,8 @@ const ProjectSettingsClient = () => {
                           alt="Project image"
                         />
                       ) : (
-                        <Avatar className="size-[72px]">
-                          <AvatarFallback>
+                        <Avatar className="size-[72px] rounded-md">
+                          <AvatarFallback className="rounded-md">
                             <ImageIcon className="size-[36px] text-neutral-400" />
                           </AvatarFallback>
                         </Avatar>
@@ -242,7 +242,7 @@ const ProjectSettingsClient = () => {
               className="w-fit ml-auto"
               variant={"destructive"}
               type="button"
-              disabled={isProjectPending}
+              disabled={isDeleteProjectPending}
               onClick={handleDeleteProject}
             >
               Delete project
