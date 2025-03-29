@@ -1,4 +1,9 @@
 "use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import useConfirm from "@/hooks/use-confirm";
+
+import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -6,12 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
-import React from "react";
 import useEditTaskModal from "../hooks/use-edit-task-modal";
 import useDeleteTask from "../api/use-delete-task";
-import useConfirm from "@/hooks/use-confirm";
-import { useRouter } from "next/navigation";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 
 interface TaskActionProps {

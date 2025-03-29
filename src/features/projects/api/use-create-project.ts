@@ -26,11 +26,10 @@ const useCreateProject = () => {
       }
       return await response.json();
     },
-    onSuccess: ({ data }) => {
-      toast.success("Created project");
+    onSuccess: () => {
+      toast.success("Project created");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      queryClient.invalidateQueries({ queryKey: ["project", data.$id] });
     },
     onError: () => {
       toast.success("Failed to create project");

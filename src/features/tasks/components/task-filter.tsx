@@ -1,4 +1,6 @@
 "use client";
+import React from "react";
+
 import {
   Select,
   SelectContent,
@@ -10,11 +12,12 @@ import {
 } from "@/components/ui/select";
 import { FolderIcon, ListChecksIcon, UserIcon } from "lucide-react";
 import { TaskStatus } from "../types";
+import { MemberAvatar } from "@/features/members/components/member-avatar";
+import { DatePicker } from "@/components/date-picker";
+
 import useGetMembers from "@/features/members/api/use-get-members";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
 
-import React from "react";
-import { DatePicker } from "@/components/date-picker";
 import useTaskFilters from "../hooks/use-task-filters";
 import useGetProjects from "@/features/projects/api/use-get-projects";
 const TaskFilter = () => {
@@ -70,7 +73,7 @@ const TaskFilter = () => {
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex items-center pr-2">
-            <UserIcon className="size-4 mr-2" />
+            {!assigneeId && <UserIcon className="size-4 mr-2" />}
             <SelectValue placeholder="All assignees" />
           </div>
         </SelectTrigger>
@@ -80,7 +83,10 @@ const TaskFilter = () => {
             <SelectSeparator />
             {memberOptions?.map((member) => (
               <SelectItem key={member.value} value={member.value}>
-                {member?.label}
+                <div className="flex items-center max-w-[200px]">
+                  <MemberAvatar name={member.label} />
+                  <span className="ml-2 truncate">{member?.label}</span>
+                </div>
               </SelectItem>
             ))}
           </SelectGroup>

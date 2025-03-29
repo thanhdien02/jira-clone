@@ -1,12 +1,13 @@
 "use client";
 
+import { Loader } from "lucide-react";
+
 import useGetMembers from "@/features/members/api/use-get-members";
-import EditTaskForm from "./edit-task-form";
 import useGetProjects from "@/features/projects/api/use-get-projects";
 import useGetTask from "../api/use-get-task";
 import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
+import EditTaskForm from "./edit-task-form";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Loader } from "lucide-react";
 
 interface EditTaskWrapperProps {
   taskId: string;

@@ -30,6 +30,9 @@ const useUpdateBulkTasks = () => {
         queryKey: ["workspace-tasks-statistics"],
       });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({
+        queryKey: ["workspace-tasks-my-statistics"],
+      });
     },
     onError: () => {
       toast.error("Failed to update task");

@@ -27,6 +27,9 @@ const useCreateTask = () => {
       queryClient.invalidateQueries({
         queryKey: ["workspace-tasks-statistics"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["workspace-tasks-my-statistics"],
+      });
     },
     onError: () => {
       toast.success("Failed to create task");

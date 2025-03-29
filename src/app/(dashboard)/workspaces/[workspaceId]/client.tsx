@@ -1,23 +1,25 @@
 "use client";
-
-import StatisticCount from "@/components/statistics-count";
-import { Button } from "@/components/ui/button";
-import useGetMembers from "@/features/members/api/use-get-members";
-import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { Member } from "@/features/members/types";
-import useGetProjects from "@/features/projects/api/use-get-projects";
-import ProjectAvatar from "@/features/projects/components/project-avatar";
-import useCreateProjectModal from "@/features/projects/hooks/use-create-project-modal";
-import { Project } from "@/features/projects/types";
-import useGetTasks from "@/features/tasks/api/use-get-tasks";
-import { TaskDate } from "@/features/tasks/components/task-date";
-import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
-import { Task } from "@/features/tasks/types";
-import useGetWorkspaceStatistics from "@/features/workspaces/api/use-get-workspace-statistics";
-import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
-import { Loader, PlusIcon, TriangleAlert } from "lucide-react";
-import { IoMdSettings } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { IoMdSettings } from "react-icons/io";
+import { Loader, PlusIcon, TriangleAlert } from "lucide-react";
+
+import { MemberAvatar } from "@/features/members/components/member-avatar";
+import { Button } from "@/components/ui/button";
+import { Member } from "@/features/members/types";
+import { Task } from "@/features/tasks/types";
+import { Project } from "@/features/projects/types";
+import { TaskDate } from "@/features/tasks/components/task-date";
+import StatisticCount from "@/components/statistics-count";
+import ProjectAvatar from "@/features/projects/components/project-avatar";
+
+import useWorkspaceId from "@/features/workspaces/hooks/use-workspace-id";
+import useGetMembers from "@/features/members/api/use-get-members";
+import useGetProjects from "@/features/projects/api/use-get-projects";
+import useGetTasks from "@/features/tasks/api/use-get-tasks";
+import useGetWorkspaceStatistics from "@/features/workspaces/api/use-get-workspace-statistics";
+
+import useCreateProjectModal from "@/features/projects/hooks/use-create-project-modal";
+import useCreateTaskModal from "@/features/tasks/hooks/use-create-task-modal";
 
 const DashboardWorkspaceClient = () => {
   const workspaceId = useWorkspaceId();
@@ -25,9 +27,10 @@ const DashboardWorkspaceClient = () => {
   const { data: dataTaskList, isLoading: isTaskLoading } = useGetTasks({
     workspaceId,
   });
-  const { data, isLoading: isStatisticLoading } = useGetWorkspaceStatistics({
-    workspaceId,
-  });
+  const { data: dataWorkspace, isLoading: isStatisticLoading } =
+    useGetWorkspaceStatistics({
+      workspaceId,
+    });
   const { data: dataProjectList, isLoading: isProjectLoading } = useGetProjects(
     { workspaceId }
   );
@@ -47,7 +50,7 @@ const DashboardWorkspaceClient = () => {
       </div>
     );
   }
-  if (!data || !dataTaskList || !dataProjectList || !dataMemberList) {
+  if (!dataWorkspace || !dataTaskList || !dataProjectList || !dataMemberList) {
     return (
       <div className="h-[calc(100vh-73px)] flex flex-col items-center justify-center gap-y-3">
         <TriangleAlert className="size-6 text-neutral-500" />
@@ -57,7 +60,7 @@ const DashboardWorkspaceClient = () => {
   }
   return (
     <div className="p-5">
-      <StatisticCount data={data} />
+      <StatisticCount data={dataWorkspace} />
 
       <div className="grid xl:grid-cols-2 grid-cols-1 gap-5 mt-5">
         <TaskList data={dataTaskList.documents} />
